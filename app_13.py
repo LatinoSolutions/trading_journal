@@ -115,7 +115,7 @@ trade_count = get_trade_count()
 def main():
     global trade_count
 
-    st.title("Mi Journal App (Secciones + Visualización de KPIs)")
+    st.title("Bru's Journal App!🥃")
 
     current_trade_id = trade_count
     st.write(f"**Trade #:** {current_trade_id}")
@@ -124,7 +124,7 @@ def main():
     # 1) DATOS DEL TRADE
     # -------------------------------------------------------------------------
     with st.expander("Datos del Trade"):
-        usar_manual = st.checkbox("¿Agregar trades antiguos?")
+        usar_manual = st.checkbox("¿Agregar un trade antiguo?")
         if usar_manual:
             manual_date = st.date_input("Fecha del Trade", value=date.today())
             manual_time_str = st.text_input("Hora del Trade (HH:MM)", value="08:00")
