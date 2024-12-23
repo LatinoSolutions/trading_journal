@@ -3,34 +3,11 @@ import csv
 import os
 from datetime import datetime, date, time
 import matplotlib.pyplot as plt
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 
 ###############################################################################
-#                           CONFIGURACIÓN CSV Y GOOGLE SHEETS
+#                           CONFIGURACIÓN CSV
 ###############################################################################
 CSV_FILE = "trades_journal.csv"
-GOOGLE_SHEETS_NAME = "Trades Journal"
-
-# Configuración de Google Sheets
-def connect_to_google_sheets():
-    scope = [
-        "https://spreadsheets.google.com/feeds",
-        "https://www.googleapis.com/auth/drive"
-    ]
-    creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", scope)
-    client = gspread.authorize(creds)
-    sheet = client.open(GOOGLE_SHEETS_NAME).sheet1
-    return sheet
-
-# Inicializar conexión
-try:
-    google_sheet = connect_to_google_sheets()
-except Exception as e:
-    google_sheet = None
-    st.error("No se pudo conectar a Google Sheets. Verifica las credenciales.")
-
-# Funciones CSV
 
 def get_trade_count():
     """
@@ -52,15 +29,6 @@ def save_to_csv(data_dict, filename=CSV_FILE):
         if not file_exists:
             writer.writeheader()
         writer.writerow(data_dict)
-
-def save_to_google_sheets(data_dict):
-    """Guarda data_dict como una nueva fila en Google Sheets."""
-    if google_sheet:
-        try:
-            google_sheet.append_row(list(data_dict.values()))
-            st.success("Datos guardados en Google Sheets.")
-        except Exception as e:
-            st.error(f"Error al guardar en Google Sheets: {e}")
 
 trade_count = get_trade_count()
 
@@ -106,7 +74,7 @@ def main():
 
     with st.expander("Checklist para las Entradas"):
 
-        # Confluences checklist
+ # Confluences checklist
         st.write("**Confluences (selecciona las que apliquen)**")
         confluence_list = [
             "Asia: AH - AML - AL",
@@ -171,6 +139,8 @@ def main():
         approach3_let = st.checkbox("LET (App#3)?")
         approach4_edm = st.checkbox("EDM (App#4)?")
 
+       
+
     with st.expander("Resultados y KPIs"):
         result = st.radio("Result", ["Win", "Loss", "BE"])
         comments = st.text_area("Comments sobre el resultado")
@@ -234,4 +204,9 @@ def main():
             "timestamp_saved": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         save_to_csv(data_to_save)
-        save_to_google_sheets(data
+	save_to_google_sheets(data_to_save)
+        trade_count += 1
+        st.success(f"¡Trade #{current_trade_id} guardado en '{CSV_FILE}'!")
+
+if __name__ == "__main__":
+    main()
