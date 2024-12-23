@@ -204,6 +204,7 @@ def main():
             "timestamp_saved": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         save_to_csv(data_to_save)
+	save_to_google_sheets(data_to_save)
         trade_count += 1
         st.success(f"¡Trade #{current_trade_id} guardado en '{CSV_FILE}'!")
 
